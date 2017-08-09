@@ -10,14 +10,12 @@ module orwell.proxy.httplistener;
 
 public import orwell.http.httprequest;
 public import orwell.http.httpresponse;
+public import orwell.http.httpmessagehandler;
 import std.socket;
 import core.thread;
 import std.concurrency;
 import std.experimental.logger;
 
-// Aliases for request/response intercept handler
-alias HttpRequestHandler = HttpRequest delegate(HttpRequest request);
-alias HttpResponseHandler = HttpResponse delegate(HttpResponse response);
 
 class HttpListener : Thread {
 
@@ -28,22 +26,17 @@ class HttpListener : Thread {
     // Listener Socket
     TcpSocket listener;
 
-    // Request / Response Handlers
-    HttpRequestHandler requestHandler;
-    HttpResponseHandler responseHandler;
+    // HttpMessageHandler
+    iHttpMessageHandler messageHandler;
 
     // Listener Status
     bool isRunning = false;
 
-    this(string ip, ushort port, HttpRequestHandler requestHandler, HttpResponseHandler responseHandler) {
+    this(string ip, ushort port, iHttpMessageHandler messageHandler) {
         super(&run);
         this.ip = ip;
         this.port = port;
-        this.requestHandler = requestHandler;
-        this.responseHandler = responseHandler;
-
-        assert(this.requestHandler,  "Request handler not set in HttpListener");
-        assert(this.responseHandler, "Response handler not set in HttpListener");
+        this.messageHandler = messageHandler;
     }
 
     /**
@@ -80,7 +73,7 @@ class HttpListener : Thread {
             tracef("Accepted connection from %s:%s", client.remoteAddress().toAddrString(), client.remoteAddress().toPortString());
 
             // Start client handler
-            auto handler = new HttpClientHandler(client, this.requestHandler, this.responseHandler).start();
+            auto handler = new HttpClientHandler(client, this.messageHandler).start();
         }
     }
 }
@@ -91,19 +84,14 @@ class HttpClientHandler : Thread {
     // Client Socket
     Socket client;
 
-    // Request / Response Handlers
-    HttpRequestHandler requestHandler;
-    HttpResponseHandler responseHandler;
+    // HttpMessageHandler
+    iHttpMessageHandler messageHandler;
 
     // HttpClientHandler Constructor
-    this(Socket client, HttpRequestHandler requestHandler, HttpResponseHandler responseHandler) {
+    this(Socket client, iHttpMessageHandler messageHandler) {
         super(&run);
         this.client = client;
-        this.requestHandler = requestHandler;
-        this.responseHandler = responseHandler;
-
-        assert(this.requestHandler,  "Request handler not set in HttpClientHandler");
-        assert(this.responseHandler, "Response handler not set in HttpClientHandler");
+        this.messageHandler = messageHandler;
     }
 
     /**
@@ -118,13 +106,13 @@ class HttpClientHandler : Thread {
 
         // Send request to intercept handler
         tracef("Calling request handler");
-        request = this.requestHandler(request);
+        request = this.messageHandler.handleRequest(request);
 
         // Send request to server
         HttpResponse response = this.sendRequest(request);
 
         // Send response to intercept handler
-        response = this.responseHandler(response);
+        response = this.messageHandler.handleResponse(response);
 
         // Send response to client
         this.sendResponse(response);
@@ -210,4 +198,3 @@ class HttpClientHandler : Thread {
         return data;
     }
 }
-

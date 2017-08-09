@@ -7,20 +7,22 @@
 //
 
 import orwell.proxy.httplistener;
-
-
+import orwell.http.httpmessagehandler;
 import std.stdio;
 import std.string;
 
 
 void main() {
-    HttpListener server = new HttpListener("localhost", 8888, (HttpRequest request) {
-        writeln("[Callback] Request intercepted:\n", request);
-        return request;
-    }, (HttpResponse response) {
-        writeln("[Callback] Response intercepted:\n", response);
-        return response;
-    });
+    HttpListener server = new HttpListener("localhost", 8888, new HttpMessageHandler(
+        (HttpRequest request) {
+            writeln("[Callback] Request intercepted");
+            return request;
+        },
+        (HttpResponse response) {
+            writeln("[Callback] Response intercepted");
+            return response;
+        }
+    ));
 
     server.start();
     server.join();

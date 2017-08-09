@@ -1,3 +1,11 @@
+//
+// httprequest.d 
+// Orwell
+//
+// Created by Matthew Remmel on 8/2/17.
+// Copyright (c) 2017 Matthew Remmel. All rights reserved.
+//
+
 module orwell.http.httpmessage;
 
 public import etc.enums;
