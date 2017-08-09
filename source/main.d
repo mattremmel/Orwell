@@ -7,7 +7,6 @@
 //
 
 import orwell.proxy.httplistener;
-import orwell.http.httpmessagehandler;
 import std.stdio;
 import std.string;
 
