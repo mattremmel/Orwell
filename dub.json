@@ -1,0 +1,28 @@
+{
+	"name": "orwell",
+	"authors": [
+		"Matthew Remmel"
+	],
+	"description": "A security framework and proxy for analyzing network traffic and web applications",
+	"copyright": "Copyright © 2017, Matthew Remmel",
+	"license": "proprietary",
+    "targetType": "executable",
+    "targetPath": "bin",
+    "configurations": [
+        {
+            "name": "executable"
+        },
+        {
+            "name": "unittest",
+            "targetType": "executable",
+            "preBuildCommands": ["dub run unit-threaded -c gen_ut_main -- -f bin/ut.d"],
+            "mainSourceFile": "bin/ut.d",
+            "sourcePaths": ["tests"],
+            "excludedSourceFiles": ["source/main.d"]
+        }
+    ],
+    "dependencies": {
+        "urld": "~>2.1.0",
+        "unit-threaded": "~>0.7.28"
+    }
+}

@@ -1,0 +1,7 @@
+{
+	"fileVersion": 1,
+	"versions": {
+		"unit-threaded": "0.7.28",
+		"urld": "2.1.0"
+	}
+}
