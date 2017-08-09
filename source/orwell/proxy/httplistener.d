@@ -16,7 +16,9 @@ import core.thread;
 import std.concurrency;
 import std.experimental.logger;
 
-
+/**
+  * Listener that accepts connections and sends them to the HttpClientHandler
+  */
 class HttpListener : Thread {
 
     // Listener Address
@@ -78,7 +80,9 @@ class HttpListener : Thread {
     }
 }
 
-
+/**
+  * Handler that proxies requests and responses through a message handler
+  */
 class HttpClientHandler : Thread {
 
     // Client Socket
