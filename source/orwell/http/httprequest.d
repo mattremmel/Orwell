@@ -9,12 +9,17 @@
 module orwell.http.httprequest;
 
 public import orwell.http.httpmessage;
-import url;
+public import url;
+public import std.datetime;
 import std.experimental.logger;
 import std.string;
 import std.format;
-import std.datetime;
 
+
+/**
+  * Shared identifier to uniquely identify and order requests received
+  */
+shared static size_t _requestid = 0;
 
 /**
   * The struct responsible for holding a representation of an
@@ -22,6 +27,10 @@ import std.datetime;
   */
 struct HttpRequest {
 
+    /**
+      * ID to sync request and responses and to store request order
+      */
+    size_t id;
     
     /**
       * The HTTP/1.1 method of the request
@@ -58,6 +67,13 @@ struct HttpRequest {
       * Parse request string into HttpRequest object
       */
     this(string data) {
+        // Set and increment ID
+        // TODO: Confirm that this would behave as expected
+        synchronized {
+            import core.atomic: atomicOp;
+            this.id = _requestid.atomicOp!"+="(1);
+        }
+
         // Split request into lines
         int i = 0;
         string[] lines = data.splitLines();
@@ -84,12 +100,17 @@ struct HttpRequest {
         // Set content
         // Skip CRLF token
         this.content = lines[++i..$].join("\n");
+
+        // NOTE: The timestamp is set at the point where the request is sent to the host
+
+        // Set size
+        this.size = data.length; // Equivilent to bytes if string.type == utf-8
     }
 
     /**
       * Compile request object back into request string
       */
-    string toString() {
+    string toString() const {
         string request = "";
 
         // Add start line

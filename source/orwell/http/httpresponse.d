@@ -9,14 +9,19 @@
 module orwell.http.httpresponse;
 
 public import orwell.http.httpmessage;
+public import std.datetime;
 import std.experimental.logger;
 import std.string;
 import std.format;
-import std.datetime;
 import std.conv;
 
 
 struct HttpResponse {
+
+    /**
+      * The ID of the request this response is for
+      */
+    size_t id;
 
     /**
       * The HTTP version of the response

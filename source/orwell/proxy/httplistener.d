@@ -109,11 +109,11 @@ class HttpClientHandler : Thread {
         HttpRequest request = receiveRequest();
 
         // Send request to intercept handler
-        tracef("Calling request handler");
         request = this.messageHandler.handleRequest(request);
 
         // Send request to server
         HttpResponse response = this.sendRequest(request);
+        response.id = request.id; // Link the request and response
 
         // Send response to intercept handler
         response = this.messageHandler.handleResponse(response);
