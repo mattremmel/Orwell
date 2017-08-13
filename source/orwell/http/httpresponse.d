@@ -48,9 +48,9 @@ struct HttpResponse {
       */
     string content;
 
-    /**
-      * Response meta data
-      */
+    /*
+     * Response meta data
+     */
     SysTime timestamp; /// The timestamp when the response was received
     size_t size;       /// The size of the entire response
 
