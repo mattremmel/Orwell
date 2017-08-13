@@ -1,6 +1,7 @@
 {
 	"fileVersion": 1,
 	"versions": {
+		"d2sqlite3": "0.13.1",
 		"unit-threaded": "0.7.28",
 		"urld": "2.1.0"
 	}

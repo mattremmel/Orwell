@@ -23,6 +23,10 @@
     ],
     "dependencies": {
         "urld": "~>2.1.0",
+        "d2sqlite3": "~>0.13.1",
         "unit-threaded": "~>0.7.28"
+    },
+    "subConfigurations": {
+        "d2sqlite3": "all-included"
     }
 }
