@@ -50,7 +50,7 @@ class HttpListener : Thread {
         trace("Initilizing http listener");
 
         // Create socket object
-        this.listener = new TcpSocket;
+        this.listener = new TcpSocket();
 
         // Bind to address
         try {
