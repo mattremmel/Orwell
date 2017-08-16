@@ -22,7 +22,7 @@
         }
     ],
     "dependencies": {
-        "urld": "~>2.1.0",
+        "vibe-d": "~>0.8.1-rc.2",
         "d2sqlite3": "~>0.13.1",
         "unit-threaded": "~>0.7.28"
     },
